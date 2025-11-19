@@ -11,6 +11,7 @@ if (isset($_POST['login'])) {
     $username = mysqli_real_escape_string($koneksi, $username);
     
     // 1. Query untuk mendapatkan data pengguna berdasarkan username
+    // CATATAN: Pada implementasi nyata, kolom 'password' harus menggunakan HASH (ex: bcrypt)
     $query = "SELECT id_pengguna, username, password, hak_akses, id_referensi FROM pengguna WHERE username = '$username'";
     $result = mysqli_query($koneksi, $query);
 
@@ -18,8 +19,6 @@ if (isset($_POST['login'])) {
         $user = mysqli_fetch_assoc($result);
         
         // 2. Verifikasi Password (di implementasi nyata, gunakan password_verify)
-        // Karena kita menggunakan password plaintext ('password123') di dummy data,
-        // kita verifikasi secara langsung.
         if ($password === $user['password']) { 
             
             // 3. Login Berhasil: Set Sesi
