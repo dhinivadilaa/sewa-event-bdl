@@ -69,7 +69,6 @@ if (isset($_POST['tambah_keranjang'])) {
 
 
 // Query untuk mengambil data pakaian.
-// ASUMSI: Kolom 'deskripsi' dan 'gambar' sudah ditambahkan ke tabel 'pakaian'
 $query_pakaian = "SELECT id_pakaian, nama_pakaian, deskripsi, harga_sewa, stok, gambar FROM pakaian WHERE stok > 0 ORDER BY nama_pakaian ASC";
 $result_pakaian = mysqli_query($koneksi, $query_pakaian);
 
@@ -85,17 +84,81 @@ if (!$result_pakaian) {
     <title>Katalog Pakaian | Sewa Event BDL</title>
     <link rel="stylesheet" href="../../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Penyesuaian Style untuk Katalog Pakaian agar lebih menarik */
+        .product-card {
+            /* Menggunakan gaya yang diwarisi dari style.css, tetapi diperjelas untuk kontras ungu */
+            border: 1px solid #e9ecef;
+        }
+
+        .product-card img {
+            /* Menyesuaikan ukuran gambar untuk tampilan kartu yang lebih baik */
+            height: 250px; 
+            object-fit: cover;
+        }
+
+        .product-card-body h5 {
+            min-height: 40px; /* Memastikan tinggi judul seragam */
+        }
+        
+        .product-card-body .price {
+             /* Harga sewa per hari ditonjolkan dengan warna success */
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 5px 20px rgba(138, 77, 255, 0.2); /* Shadow ungu saat hover */
+            transform: translateY(-4px);
+        }
+
+        .input-group-sewa {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .input-group-sewa label {
+            flex-grow: 1;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .input-group-sewa input[type="number"] {
+            width: 80px;
+            padding: 6px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+    </style>
 </head>
 <body>
     <?php include('../includes/header.php'); ?>
     
     <div class="wrapper" style="display: block;">
         <div class="main-content" style="margin-left: 0; max-width: 1200px; margin: 90px auto 30px auto;">
-            <h2><i class="fas fa-tshirt"></i> Katalog Pakaian Tersedia</h2>
-            <p>Pilihan terbaik untuk jas, gaun, dan pakaian adat.</p>
-            <a href="index.php" style="margin-bottom: 20px; display: inline-block;"><i class="fas fa-arrow-left"></i> Kembali ke Pilihan Kategori</a>
+            <h2><i class="fas fa-tshirt" style="color: var(--primary-color);"></i> Katalog Pakaian Tersedia</h2>
+            <p>Pilihan terbaik untuk jas, gaun, dan pakaian adat. Pilih lama sewa (Hari) yang Anda butuhkan.</p>
+            <a href="index.php" style="margin-bottom: 20px; display: inline-block;"><i class="fas fa-arrow-left"></i> Kembali ke Kategori</a>
             <hr>
             
+            <?php 
+            // Tampilkan pesan sukses atau error (Jika ada)
+            if (isset($_SESSION['success_message'])) {
+                echo '<p style="color: var(--success-color); background-color: #d4edda; border: 1px solid #c3e6cb; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                        <i class="fas fa-check-circle"></i> ' . $_SESSION['success_message'] . '</p>';
+                unset($_SESSION['success_message']);
+            }
+             if (isset($_SESSION['error_message'])) {
+                echo '<p style="color: var(--danger-color); background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                        <i class="fas fa-exclamation-triangle"></i> ' . $_SESSION['error_message'] . '</p>';
+                unset($_SESSION['error_message']);
+            }
+            ?>
+
             <div class="catalog-grid">
                 <?php if (mysqli_num_rows($result_pakaian) > 0): ?>
                     <?php while ($pakaian = mysqli_fetch_assoc($result_pakaian)): ?>
@@ -104,21 +167,23 @@ if (!$result_pakaian) {
                         <div class="product-card-body">
                             <h5><?php echo htmlspecialchars($pakaian['nama_pakaian']); ?></h5>
                             <p class="price">Rp. <?php echo number_format($pakaian['harga_sewa'], 0, ',', '.'); ?> / hari</p>
-                            <p class="stok"><i class="fas fa-boxes"></i> Stok: **<?php echo $pakaian['stok']; ?>**</p>
                             
                             <?php if (!empty($pakaian['deskripsi'])): ?>
                                 <p style="font-size: 13px; color: var(--secondary-color); margin-bottom: 10px; height: 35px; overflow: hidden;"><?php echo htmlspecialchars($pakaian['deskripsi']); ?></p>
                             <?php endif; ?>
                             
+                            <p class="stok"><i class="fas fa-boxes"></i> Stok: **<?php echo $pakaian['stok']; ?>**</p>
+                            
                             <form action="katalog_pakaian.php" method="POST">
                                 <input type="hidden" name="id_pakaian" value="<?php echo htmlspecialchars($pakaian['id_pakaian']); ?>">
                                 
-                                <label for="lama_sewa_<?php echo $pakaian['id_pakaian']; ?>" style="font-size: 14px; display: block; margin-top: 10px; margin-bottom: 5px; font-weight: 500;">
-                                    Lama Sewa (Hari)
-                                </label>
-                                <input type="number" name="lama_sewa" id="lama_sewa_<?php echo $pakaian['id_pakaian']; ?>" 
-                                       value="1" min="1" max="30" required 
-                                       style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 6px; margin-bottom: 10px; box-sizing: border-box;">
+                                <div class="input-group-sewa">
+                                    <label for="lama_sewa_<?php echo $pakaian['id_pakaian']; ?>">
+                                        Lama Sewa (Hari)
+                                    </label>
+                                    <input type="number" name="lama_sewa" id="lama_sewa_<?php echo $pakaian['id_pakaian']; ?>" 
+                                        value="1" min="1" max="30" required>
+                                </div>
                                 
                                 <button type="submit" name="tambah_keranjang" class="rent-btn" style="border: none;">
                                     <i class="fas fa-shopping-cart"></i> Tambah ke Keranjang

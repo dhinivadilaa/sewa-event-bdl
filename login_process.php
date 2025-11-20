@@ -1,47 +1,61 @@
 <?php
-// FILE: login_process.php (Logika Otentikasi)
+// FILE: login_process.php
 session_start();
-require_once 'config.php'; // Hubungkan ke database
+require_once 'config.php'; // Atau config/koneksi.php, sesuaikan path
 
 if (isset($_POST['login'])) {
     $username = $_POST['username'];
-    $password = $_POST['password']; // Password masih plaintext
+    $password = $_POST['password']; // Ingat: JANGAN PERNAH menyimpan password tanpa hash di sistem nyata!
 
-    // Amankan input
+    // Sanitasi input
     $username = mysqli_real_escape_string($koneksi, $username);
-    
-    // 1. Query untuk mendapatkan data pengguna berdasarkan username
-    // CATATAN: Pada implementasi nyata, kolom 'password' harus menggunakan HASH (ex: bcrypt)
-    $query = "SELECT id_pengguna, username, password, hak_akses, id_referensi FROM pengguna WHERE username = '$username'";
+    // Password tidak perlu disanitasi jika akan dicompare dengan hash
+
+    // Query untuk mencari pengguna berdasarkan username
+    $query = "SELECT * FROM pengguna WHERE username = '$username'";
     $result = mysqli_query($koneksi, $query);
 
-    if (mysqli_num_rows($result) == 1) {
+    if ($result && mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
         
-        // 2. Verifikasi Password (di implementasi nyata, gunakan password_verify)
-        if ($password === $user['password']) { 
+        // Cek Password (Dalam kasus nyata, gunakan password_verify($password, $user['password']))
+        if ($password == $user['password']) {
             
-            // 3. Login Berhasil: Set Sesi
+            // Login Berhasil
             $_SESSION['id_pengguna'] = $user['id_pengguna'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['hak_akses'] = $user['hak_akses'];
-            $_SESSION['id_referensi'] = $user['id_referensi'];
+            $_SESSION['id_referensi'] = $user['id_referensi']; // ID Customer, Staff, Vendor, atau Admin
+
+            $hak_akses_lower = strtolower($user['hak_akses']);
             
-            $hak_akses_folder = strtolower($user['hak_akses']);
+            // Logika Redirect Berdasarkan Hak Akses
+            // Asumsi: folder view Anda memiliki struktur views/{hak_akses}/index.php
             
-            // 4. Redirect ke Dashboard yang Sesuai
-            header('Location: views/' . $hak_akses_folder . '/index.php');
+            if ($hak_akses_lower == 'admin') {
+                header('Location: views/admin/index.php');
+            } elseif ($hak_akses_lower == 'staff') {
+                header('Location: views/staff/index.php'); // Pastikan folder views/staff ada
+            } elseif ($hak_akses_lower == 'vendor') {
+                header('Location: views/vendor/index.php'); // Pastikan folder views/vendor ada
+            } elseif ($hak_akses_lower == 'customer') {
+                header('Location: views/customer/index.php');
+            } else {
+                // Role tidak dikenali
+                $_SESSION['error_message'] = "Hak akses tidak valid.";
+                header('Location: index.php');
+            }
             exit();
 
         } else {
-            // Password salah
+            // Password Salah
             $_SESSION['error_message'] = "Password salah.";
             header('Location: index.php');
             exit();
         }
     } else {
-        // Username tidak ditemukan
-        $_SESSION['error_message'] = "Username tidak terdaftar.";
+        // Username Tidak Ditemukan
+        $_SESSION['error_message'] = "Username tidak ditemukan.";
         header('Location: index.php');
         exit();
     }

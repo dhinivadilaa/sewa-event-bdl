@@ -85,7 +85,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) 
         }
 
         .total-box {
-            background-color: #e9f7ff;
+            /* Menggunakan warna ungu lembut untuk border total box */
+            background-color: var(--soft-purple-bg, #E0CCFF);
             border: 1px solid var(--primary-color);
             padding: 20px;
             border-radius: 10px;
@@ -141,6 +142,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) 
             <h2><i class="fas fa-shopping-cart"></i> Keranjang Belanja</h2>
             <p>Tinjau pakaian dan layanan event yang akan Anda sewa.</p>
             <hr>
+            
+            <a href="index.php" style="margin-bottom: 20px; display: inline-block; font-weight: 500;"><i class="fas fa-arrow-left"></i> Lanjutkan Belanja/Lihat Katalog</a>
             
             <?php 
             // Tampilkan pesan sukses jika ada
