@@ -1,26 +1,317 @@
-/* FILE: assets/css/style.css (Styling Utama) */
+/* ============================================================
+   FILE: assets/css/style.css
+   STYLE UTAMA - Modern, Profesional, Clean UI
+   ============================================================ */
+
+/* ========== 1. FONT & WARNA GLOBAL ========== */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --primary-color: #8A4DFF; /* Ungu Soft/Orchid */
-    --secondary-color: #6c757d; /* Abu-abu Sekunder */
-    --success-color: #28a745; /* Hijau */
-    --warning-color: #ffc107; /* Kuning */
-    --danger-color: #dc3545; /* Merah */
-    --light-bg: #f8f9fa; /* Latar Belakang Sangat Terang */
-    --dark-text: #343a40; /* Teks Gelap */
-    --card-bg: #ffffff; /* Latar Belakang Kartu */
-    --shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    --primary-dark: #6B38CC; /* Ungu Darker untuk hover/focus */
-    --soft-purple-bg: #E0CCFF; /* Background aksen ungu sangat muda */
+    --primary-color: #8A4DFF;
+    --primary-dark: #6B38CC;
+    --accent-red: #FF4D6D;
+
+    --dark-text: #2e2e2e;
+    --light-text: #ffffff;
+
+    --light-bg: #faf8ff;
+    --soft-bg: #f2eaff;
+    --white: #ffffff;
+
+    --shadow: 0 4px 15px rgba(0,0,0,0.08);
+    --radius: 12px;
 }
-/* ... (Bagian CSS lainnya) ... */
-.login-container button[type="submit"]:hover {
-    background-color: var(--primary-dark);
+
+/* ========== 2. RESET ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
-/* ... (Bagian CSS lainnya) ... */
-.product-card-body .rent-btn:hover {
-    background-color: var(--primary-dark);
+
+body {
+    background: var(--light-bg);
+    color: var(--dark-text);
+}
+
+/* ========== 3. GLOBAL COMPONENTS ========== */
+
+/* Tombol Umum */
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    padding: 12px 25px;
+    border-radius: var(--radius);
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s ease-in-out;
+}
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-outline {
+    padding: 12px 25px;
+    border: 2px solid var(--primary-color);
+    background: transparent;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--primary-color);
+    transition: 0.25s;
+}
+.btn-outline:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Section Title */
+.section-title {
+    text-align: center;
+    font-size: 2.1rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.section-sub {
+    text-align: center;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+/* Card */
+.card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+/* Navbar */
+.navbar {
+    width: 100%;
+    padding: 18px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--white);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.navbar .logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+.navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+}
+.navbar ul li a {
     text-decoration: none;
+    font-weight: 500;
+    color: var(--dark-text);
+    transition: 0.2s;
 }
-/* ... (Bagian CSS lainnya) ... */
+.navbar ul li a:hover {
+    color: var(--primary-color);
+}
+
+
+/* ========== 4. LANDING PAGE HERO ========== */
+
+.hero {
+    width: 100%;
+    padding: 100px 6%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+}
+
+.hero-text {
+    width: 50%;
+}
+
+.hero-text h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+.hero-text p {
+    margin: 20px 0;
+    font-size: 1.1rem;
+    color: #444;
+}
+
+.hero-buttons {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+}
+
+.hero-img {
+    width: 50%;
+}
+.hero-img img {
+    width: 100%;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+
+/* ========== 5. FITUR SECTION ========== */
+
+.features {
+    padding: 80px 6%;
+    background: var(--white);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.feature-card {
+    padding: 30px;
+    text-align: center;
+    border-radius: var(--radius);
+    background: var(--soft-bg);
+    box-shadow: var(--shadow);
+}
+
+.feature-card i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+
+/* ========== 6. LOKASI SECTION ========== */
+
+.location {
+    padding: 80px 6%;
+}
+
+.location iframe {
+    width: 100%;
+    height: 350px;
+    border-radius: var(--radius);
+    border: none;
+    box-shadow: var(--shadow);
+}
+
+
+/* ========== 7. FOOTER ========== */
+
+.footer {
+    width: 100%;
+    padding: 25px 6%;
+    background: var(--primary-color);
+    color: white;
+    text-align: center;
+    margin-top: 50px;
+}
+
+
+/* ========== 8. LOGIN / REGISTER PAGE ========== */
+
+.login-container {
+    max-width: 420px;
+    margin: 70px auto;
+    padding: 35px;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.login-container h1 {
+    font-size: 1.9rem;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.login-container input,
+.login-container textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--radius);
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+}
+
+.login-container button[type="submit"] {
+    background: var(--primary-color);
+    width: 100%;
+    padding: 12px;
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s;
+}
+.login-container button[type="submit"]:hover {
+    background: var(--primary-dark);
+}
+
+/* Pesan Error & Sukses */
+.error-message,
+.success-message {
+    padding: 12px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+.error-message {
+    background: #ffe6e8;
+    color: #d64040;
+    border: 1px solid #ffb6bd;
+}
+
+.success-message {
+    background: #e4f8e4;
+    color: #2b8f51;
+    border: 1px solid #b9e6c0;
+}
+
+/* Link Toggle */
+.form-toggle-link {
+    color: var(--primary-color);
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+
+/* ========== 9. RESPONSIVE MOBILE ========== */
+
+@media (max-width: 900px) {
+    .hero {
+        flex-direction: column;
+        text-align: center;
+    }
+    .hero-text,
+    .hero-img {
+        width: 100%;
+    }
+    .features-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    .navbar ul {
+        display: none; /* di versi full bisa dibuatkan hamburger menu */
+    }
+}
